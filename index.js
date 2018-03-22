@@ -18,7 +18,7 @@ var nodes=[];
 // System Setup
 const KSAK=diffhell.getPrivateKey('base64');
 const KPAK=diffhell.getPublicKey('base64');
-
+var clientConfig={};
 io.on('connection',function(socket){
     /*
         Construction of SSK&PVT
@@ -27,18 +27,15 @@ io.on('connection',function(socket){
         var key=ellipticCurve.genKeyPair();
         socket.join('wsn_room',()=>{
             var UniqueId=Object.keys(socket.rooms)[0];
-            var clientConfig={
-                UniqueId:{
-                    _id:UniqueId,
-                    PVT:key.getPublic(),
-                    SSK:key.getPrivate(),
-                    KPAK:KPAK
-                }          
+            clientConfig[UniqueId]={
+                _id:UniqueId,
+                PVT:key.getPublic(),
+                SSK:key.getPrivate(),
+                KPAK:KPAK
             }  
-            console.log(clientConfig);
             nodes.push(clientConfig);
             console.log(UniqueId+" Just Joined");
-            socket.to(UniqueId).emit('setup_credentials',clientConfig);
+            socket.emit('setup_credentials',clientConfig);
         })        
     });
 });
