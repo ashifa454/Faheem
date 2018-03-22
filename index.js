@@ -34,10 +34,12 @@ io.on('connection',function(socket){
                 KPAK:KPAK
             }  
             nodes.push(clientConfig);
-            console.log(UniqueId+" Just Joined");
             socket.emit('setup_credentials',clientConfig);
         })        
     });
+    socket.on('let_me_go',(id)=>{
+
+    })
 });
 http.listen(PORT,function(){
     console.log("RUNNING ON PORT "+PORT);
