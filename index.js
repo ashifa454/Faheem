@@ -10,29 +10,34 @@ KSAK AND KPAK
 */
 var prime_length=60;
 var diffhell=crypto.createDiffieHellman(prime_length);
-diffhell.generateKeys('base64');
+diffhell.generateKeys('hex');
 var http=require('http').Server(app);
 var io=require('socket.io')(http);
 
 var nodes=[];
 // System Setup
-const KSAK=diffhell.getPrivateKey('base64');
-const KPAK=diffhell.getPublicKey('base64');
+const KSAK=diffhell.getPrivateKey('hex');
+const KPAK=diffhell.getPublicKey('hex');
 var clientConfig={};
 io.on('connection',function(socket){
     /*
         Construction of SSK&PVT
     */
     socket.on('initiate_node',()=>{
-        var key=ellipticCurve.genKeyPair();
         socket.join('wsn_room',()=>{
+            var key=ellipticCurve.genKeyPair();
             var UniqueId=Object.keys(socket.rooms)[0];
+            var Key=key.getPublic();
             clientConfig[UniqueId]={
                 _id:UniqueId,
-                PVT:key.getPublic(),
+                PVT:[
+                    2,
+                    4
+                ],
                 SSK:key.getPrivate(),
-                KPAK:KPAK
+                KPAK:126
             }  
+            console.log(clientConfig);
             nodes.push(clientConfig);
             socket.emit('setup_credentials',clientConfig);
         })        
