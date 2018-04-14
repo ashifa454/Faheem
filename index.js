@@ -8,7 +8,7 @@ const PORT=process.env.PORT||8003
 Using Diff Hell Algorithm we Ensure to Generate a Unique Pair of Mathametical Pair of 
 KSAK AND KPAK
 */
-var prime_length=60;
+var prime_length=3;
 var diffhell=crypto.createDiffieHellman(prime_length);
 diffhell.generateKeys('hex');
 var http=require('http').Server(app);
@@ -31,11 +31,11 @@ io.on('connection',function(socket){
             clientConfig[UniqueId]={
                 _id:UniqueId,
                 PVT:[
-                    2,
-                    4
+                    Key.getX().toString(10).substr(0,5),
+                    Key.getY().toString(10).substr(0,5)
                 ],
                 SSK:key.getPrivate(),
-                KPAK:126
+                KPAK:parseInt(KPAK,16).toString(10)
             }  
             console.log(clientConfig);
             nodes.push(clientConfig);
